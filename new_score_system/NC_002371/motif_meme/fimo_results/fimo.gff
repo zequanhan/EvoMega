@@ -1,0 +1,12 @@
+##gff-version 3
+NC_002371.2	fimo	nucleotide_motif	18862	18877	62.2	-	.	Name=87_motif_1_NC_002371.2-;Alias=;ID=87_motif_1-1-NC_002371.2;pvalue=6.03e-07;qvalue=0.0501;sequence=AAAAGAGATGAAAATA;
+NC_002371.2	fimo	nucleotide_motif	30932	30947	84.5	+	.	Name=6_motif_3_NC_002371.2+;Alias=;ID=6_motif_3-1-NC_002371.2;pvalue=3.51e-09;qvalue=0.000293;sequence=AAGAAAACTTAAATAT;
+NC_002371.2	fimo	nucleotide_motif	30891	30906	73.2	-	.	Name=6_motif_3_NC_002371.2-;Alias=;ID=6_motif_3-2-NC_002371.2;pvalue=4.78e-08;qvalue=0.00182;sequence=AAGAAGTCTTAAATTT;
+NC_002371.2	fimo	nucleotide_motif	31710	31725	71.8	-	.	Name=6_motif_3_NC_002371.2-;Alias=;ID=6_motif_3-3-NC_002371.2;pvalue=6.55e-08;qvalue=0.00182;sequence=AAGAACACTTAAATTA;
+NC_002371.2	fimo	nucleotide_motif	31668	31683	70.3	+	.	Name=6_motif_3_NC_002371.2+;Alias=;ID=6_motif_3-4-NC_002371.2;pvalue=9.22e-08;qvalue=0.00192;sequence=AAGTCATCTTAAATAA;
+NC_002371.2	fimo	nucleotide_motif	30955	30970	61.2	-	.	Name=6_motif_3_NC_002371.2-;Alias=;ID=6_motif_3-5-NC_002371.2;pvalue=7.52e-07;qvalue=0.0108;sequence=ATAAAAACTTAAGTAA;
+NC_002371.2	fimo	nucleotide_motif	31687	31702	61.1	-	.	Name=6_motif_3_NC_002371.2-;Alias=;ID=6_motif_3-6-NC_002371.2;pvalue=7.76e-07;qvalue=0.0108;sequence=AAGGAATCTTTAGTCA;
+NC_002371.2	fimo	nucleotide_motif	40828	40843	 60	-	.	Name=6_motif_3_NC_002371.2-;Alias=;ID=6_motif_3-7-NC_002371.2;pvalue=9.96e-07;qvalue=0.0119;sequence=TAGCAATCTTAGATAT;
+NC_002371.2	fimo	nucleotide_motif	30933	30948	69.2	+	.	Name=66_motif_3_NC_002371.2+;Alias=;ID=66_motif_3-1-NC_002371.2;pvalue=1.21e-07;qvalue=0.00766;sequence=AGAAAACTTAAATATT;
+NC_002371.2	fimo	nucleotide_motif	30966	30981	67.3	-	.	Name=66_motif_3_NC_002371.2-;Alias=;ID=66_motif_3-2-NC_002371.2;pvalue=1.84e-07;qvalue=0.00766;sequence=TTAAAAATCAAATAAA;
+NC_002371.2	fimo	nucleotide_motif	31669	31684	60.6	+	.	Name=66_motif_3_NC_002371.2+;Alias=;ID=66_motif_3-3-NC_002371.2;pvalue=8.71e-07;qvalue=0.0242;sequence=AGTCATCTTAAATAAA;

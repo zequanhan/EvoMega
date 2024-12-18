@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!-- Document definition -->
+<!-- http://zlab.bu.edu/~phaverty/SupplementalData/CisML/cisml.dtd -->
+<!DOCTYPE cis-element-search[
+<!ELEMENT cis-element-search (program-name, parameters, (pattern | multi-pattern-scan)*)>
+<!ELEMENT program-name (#PCDATA)>
+<!ELEMENT parameters (
+  pattern-file, 
+  sequence-file, 
+  background-seq-file?,
+  pattern-pvalue-cutoff?,
+  sequence-pvalue-cutoff?,
+  site-pvalue-cutoff?,
+  sequence-filtering,
+  ANY*
+ )>
+<!ELEMENT command-line (#PCDATA)>
+<!ELEMENT pattern-file (#PCDATA)>
+<!ELEMENT sequence-file (#PCDATA)>
+<!ELEMENT background-seq-file (#PCDATA)>
+<!ELEMENT pattern-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-pvalue-cutoff (#PCDATA)>
+<!ELEMENT site-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-filtering EMPTY>
+<!ELEMENT multi-pattern-scan (pattern+, ANY*)>
+<!ELEMENT pattern (scanned-sequence+, ANY*)>
+<!ELEMENT scanned-sequence (matched-element*, ANY*)>
+<!ELEMENT matched-element (sequence)>
+<!ELEMENT sequence (#PCDATA)>
+<!ATTLIST cis-element-search
+xmlns:xsi CDATA #IMPLIED
+xmlns:mem CDATA #IMPLIED
+xsi:schemaLocation CDATA #IMPLIED
+>
+<!ATTLIST sequence-filtering
+on-off CDATA #REQUIRED
+type CDATA #IMPLIED
+>
+<!ATTLIST multi-pattern-scan
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+>
+<!ATTLIST pattern
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+pvalue CDATA #IMPLIED
+score CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST scanned-sequence
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+length CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST matched-element
+start CDATA #REQUIRED
+stop CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+clusterid CDATA #IMPLIED
+>
+
+]>
+<cis-element-search
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://zlab.bu.edu/schema/cisml cisml.xsd"
+  xmlns="http://zlab.bu.edu/schema/cisml"
+  xmlns:mem="http://noble.gs.washington.edu/meme"
+>
+<program-name>fimo</program-name>
+<parameters>
+<command-line>fimo --oc /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_001416/motif_meme/fimo_results --thresh 1e-06 /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_001416/motif_meme/final_motif.meme /home/public_new/dowlond_phage/phage_gbk/NC_001416.fasta</command-line>
+<pattern-file>/home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_001416/motif_meme/final_motif.meme</pattern-file>
+<sequence-file>/home/public_new/dowlond_phage/phage_gbk/NC_001416.fasta</sequence-file>
+<site-pvalue-cutoff>1e-06</site-pvalue-cutoff>
+<sequence-filtering on-off="off"/>
+</parameters>
+<pattern accession="26_motif_1" name="">
+<scanned-sequence accession="NC_001416.1" name="NC_001416.1">
+<matched-element start="35812" stop="35798" score="20.0202" pvalue="1.47e-07">
+<sequence>GCCGGGTTTTCTTTG</sequence>
+<mem:qvalue>0.0142</mem:qvalue>
+</matched-element>
+<matched-element start="40612" stop="40626" score="18.7475" pvalue="3.63e-07">
+<sequence>GCAGGCCTTTTTATT</sequence>
+<mem:qvalue>0.0176</mem:qvalue>
+</matched-element>
+<matched-element start="29313" stop="29299" score="17.2424" pvalue="9.74e-07">
+<sequence>GGCGGGTTTTGTTTT</sequence>
+<mem:qvalue>0.0314</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="1_motif_1" name="">
+<scanned-sequence accession="NC_001416.1" name="NC_001416.1">
+<matched-element start="35592" stop="35604" score="22.1735" pvalue="1.04e-08">
+<sequence>ATCACCGCCAGTG</sequence>
+<mem:qvalue>0.000965</mem:qvalue>
+</matched-element>
+<matched-element start="37952" stop="37964" score="21.1837" pvalue="6.29e-08">
+<sequence>ATCACCGCAAGGG</sequence>
+<mem:qvalue>0.00194</mem:qvalue>
+</matched-element>
+<matched-element start="38013" stop="38001" score="21.1837" pvalue="6.29e-08">
+<sequence>ATCACCGCCAGAG</sequence>
+<mem:qvalue>0.00194</mem:qvalue>
+</matched-element>
+<matched-element start="29336" stop="29348" score="19.2959" pvalue="3.76e-07">
+<sequence>ATCCCCGCGAGTG</sequence>
+<mem:qvalue>0.0087</mem:qvalue>
+</matched-element>
+<matched-element start="35616" stop="35628" score="18.398" pvalue="6.71e-07">
+<sequence>AACACCGCCAGAG</sequence>
+<mem:qvalue>0.0124</mem:qvalue>
+</matched-element>
+<matched-element start="48489" stop="48477" score="17.7551" pvalue="9.14e-07">
+<sequence>ATCACCGGAAAGG</sequence>
+<mem:qvalue>0.0128</mem:qvalue>
+</matched-element>
+<matched-element start="35636" stop="35648" score="17.7347" pvalue="9.64e-07">
+<sequence>ATCACCGCAGATG</sequence>
+<mem:qvalue>0.0128</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="82_motif_3" name="">
+<scanned-sequence accession="NC_001416.1" name="NC_001416.1">
+<matched-element start="33956" stop="33971" score="24.0693" pvalue="4.74e-10">
+<sequence>AGATTTCCAATAATCA</sequence>
+<mem:qvalue>4.6e-05</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+</cis-element-search>

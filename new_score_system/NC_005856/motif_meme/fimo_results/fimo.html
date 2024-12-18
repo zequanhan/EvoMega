@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:cis="http://zlab.bu.edu/schema/cisml" xmlns:fimo="http://noble.gs.washington.edu/schema/cisml" xmlns:mem="http://noble.gs.washington.edu/meme">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>FIMO Results</title>
+<style type="text/css">
+td.left {text-align: left;}
+td.right {text-align: right; padding-right: 1cm;}
+</style>
+</head>
+<body color="#000000">
+<a name="top_buttons"></a>
+<hr>
+<table summary="buttons" align="left" cellspacing="0">
+<tr>
+<td bgcolor="#00FFFF"><a href="#database_and_motifs"><b>Database and Motifs</b></a></td>
+<td bgcolor="#DDFFDD"><a href="#sec_i"><b>High-scoring Motif Occurences</b></a></td>
+<td bgcolor="#DDDDFF"><a href="#debugging_information"><b>Debugging Information</b></a></td>
+<td bgcolor="#FFDD00"><a href="fimo.tsv""><b>Results in TSV Format</b></a></td>
+<td bgcolor="#FFDDFF"><a href="fimo.gff""><b>Results in GFF3 Format</b></a></td>
+<td bgcolor="#00FFFF" id="best_site"><a href="best_site.narrowPeak""><b>Best Site per Sequence</b></a></td>
+<script>
+var new_icon_src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAQCAMAAAAyEe/dAAAACVBMVEX//wAAAAD////s2cV/AAAAdUlEQVQYlXVRBxLAIAhL+P+jC2HZhXcBZEWEldDsZcLIcAhHWWnK8SDcWQhMFUHdAQ1CqQ5+CWPmlHojl+nCJNRtzu4qRc3IUzmTVpXYK0nox0z0PI1stgchdK7lEv7ekhvalw8WW547Gyzedt/2/gLx8WXjXF/1AYFriNAWAAAAAElFTkSuQmCC";
+var new_icon = document.createElement("img");
+new_icon.src = new_icon_src;
+new_icon.alt = "NEW";
+const elem = document.getElementById("best_site");
+elem.appendChild(document.createTextNode("  "));
+elem.appendChild(new_icon);
+</script>
+</tr>
+</table>
+<br/>
+<br/>
+<hr/>
+<center><big><b>FIMO - Motif search tool</b></big></center>
+<hr>
+<p>
+FIMO version 5.5.4, (Release date: Fri Jun 16 12:19:08 2023 -0700)
+</p>
+<p>
+For further information on how to interpret these results please access <a href="https://meme-suite.org/meme/doc/fimo-output-format.html">https://meme-suite.org/meme/doc/fimo-output-format.html</a>.<br>
+To get a copy of the FIMO software please access <a href="https://meme-suite.org">https://meme-suite.org</a>
+
+</p>
+<p>If you use FIMO in your research, please cite the following paper:<br>
+Charles E. Grant, Timothy L. Bailey, and William Stafford Noble,
+"FIMO: Scanning for occurrences of a given motif",
+<i>Bioinformatics</i>, <b>27</b>(7):1017-1018, 2011.
+<a href="http://bioinformatics.oxfordjournals.org/content/27/7/1017">[full text]</a></p>
+<hr>
+<center><big><b><a name="database_and_motifs">DATABASE AND MOTIFS</a></b></big></center>
+<hr>
+<div style="padding-left: 0.75in; line-height: 1em; font-family: monospace;">
+<p>
+  DATABASE /home/public_new/dowlond_phage/phage_gbk/NC_005856.fasta
+  <br />
+  Database contains 1 sequences, 94800 residues
+</p>
+<p>
+  MOTIFS /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_005856/motif_meme/final_motif.meme (DNA)
+  <table>
+    <thead>
+      <tr>
+        <th style="border-bottom: 1px dashed;">MOTIF</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;">WIDTH</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;text-align:left;" >
+         BEST POSSIBLE MATCH
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:right;">51_motif_1</td>
+        <td style="text-align:right;padding-left: 1em;">16</td>
+        <td style="text-align:left;padding-left: 1em;">ATTTTTTTAATAAATT</td>
+       </tr>
+    </tbody>
+  </table>
+</p>
+<p>
+Random model letter frequencies (--nrdb--):
+<br/>
+
+A 0.275 C 0.225 G 0.225 T 0.275 </p>
+</div>
+<hr>
+<center><big><b><a name="sec_i">SECTION I: HIGH-SCORING MOTIF OCCURENCES</a></b></big></center>
+<hr>
+<ul>
+<li>
+There were 13 motif occurences with a p-value less than 1e-06.
+
+The full set of motif occurences can be seen in the
+TSV (tab-delimited values) output file
+<a href="fimo.tsv">fimo.tsv</a>, 
+the GFF3 file 
+<a href="fimo.gff">fimo.gff</a> 
+which may be suitable for uploading to the 
+<a href="http://genome.ucsc.edu/cgi-bin/hgTables">UCSC Genome Table Browser</a>
+(assuming the FASTA input sequences included genomic coordinates in UCSC or Galaxy format),
+or the XML file 
+<a href="fimo.xml">fimo.xml</a>.
+</li>
+<li>
+The <i>p</i>-value of a motif occurrence is defined as the
+probability of a random sequence of the same length as the motif
+matching that position of the sequence with as good or better a score.
+</li>
+<li>
+The score for the match of a position in a sequence to a motif
+is computed by summing the appropriate entries from each column of
+the position-dependent scoring matrix that represents the motif.
+</li>
+<li>
+The q-value of a motif occurrence is defined as the
+false discovery rate if the occurrence is accepted as significant.
+</li>
+<li>The table is sorted by increasing <i>p</i>-value.</li>
+</ul>
+<table border="1">
+<thead>
+<tr>
+<th>Motif ID</th>
+<th>Alt ID</th>
+<th>Sequence Name</th>
+<th>Strand</th>
+<th>Start</th>
+<th>End</th>
+<th>p-value</th>
+<th>q-value</th>
+<th>Matched Sequence</th>
+</tr>
+</thead>
+<tbody>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">68667</td>
+      <td style="text-align:left;">68682</td>
+      <td style="text-align:left;">1.28e-09</td>
+      <td style="text-align:left;">0.000121</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">-</td>
+      <td style="text-align:left;">94642</td>
+      <td style="text-align:left;">94657</td>
+      <td style="text-align:left;">1.28e-09</td>
+      <td style="text-align:left;">0.000121</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">21015</td>
+      <td style="text-align:left;">21030</td>
+      <td style="text-align:left;">6.96e-09</td>
+      <td style="text-align:left;">0.000439</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATTAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">49810</td>
+      <td style="text-align:left;">49825</td>
+      <td style="text-align:left;">2.39e-08</td>
+      <td style="text-align:left;">0.00113</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTGCTCTAATAAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">65145</td>
+      <td style="text-align:left;">65160</td>
+      <td style="text-align:left;">6.37e-08</td>
+      <td style="text-align:left;">0.00241</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAAATA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1485</td>
+      <td style="text-align:left;">1500</td>
+      <td style="text-align:left;">2.91e-07</td>
+      <td style="text-align:left;">0.00604</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTATAATTATTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">58866</td>
+      <td style="text-align:left;">58881</td>
+      <td style="text-align:left;">2.95e-07</td>
+      <td style="text-align:left;">0.00604</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTTTTTTATTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">84293</td>
+      <td style="text-align:left;">84308</td>
+      <td style="text-align:left;">3e-07</td>
+      <td style="text-align:left;">0.00604</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAAATC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">82152</td>
+      <td style="text-align:left;">82167</td>
+      <td style="text-align:left;">3.19e-07</td>
+      <td style="text-align:left;">0.00604</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAATTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">94724</td>
+      <td style="text-align:left;">94739</td>
+      <td style="text-align:left;">3.19e-07</td>
+      <td style="text-align:left;">0.00604</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAATTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">-</td>
+      <td style="text-align:left;">78529</td>
+      <td style="text-align:left;">78544</td>
+      <td style="text-align:left;">5.06e-07</td>
+      <td style="text-align:left;">0.00871</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCACTAATAATTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">48140</td>
+      <td style="text-align:left;">48155</td>
+      <td style="text-align:left;">6.97e-07</td>
+      <td style="text-align:left;">0.011</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">AATGCTCTAATAAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">51_motif_1</td>
+      <td style="text-align:left;"></td>
+      <td style="text-align:left;">NC_005856.1</td>
+      <td style="text-align:center;">-</td>
+      <td style="text-align:left;">82202</td>
+      <td style="text-align:left;">82217</td>
+      <td style="text-align:left;">8.67e-07</td>
+      <td style="text-align:left;">0.0126</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTGCTCTAATAAAAA</td>
+   </tr>
+</tbody>
+</table>
+
+<hr>
+<center><big><b><a name="debugging_information">DEBUGGING INFORMATION</a></b></big></center>
+<hr>
+<p>
+Command line:
+</p>
+<pre>
+fimo --oc /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_005856/motif_meme/fimo_results --thresh 1e-06 /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_005856/motif_meme/final_motif.meme /home/public_new/dowlond_phage/phage_gbk/NC_005856.fasta
+</pre>
+<p>
+Settings:
+</p>
+<pre>
+<table>
+  <tr>
+    <td style="padding-right: 2em">output_directory = /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_005856/motif_meme/fimo_results</td>
+    <td style="padding-left: 5em; padding-right: 2em">MEME file name = /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_005856/motif_meme/final_motif.meme</td>
+    <td style="padding-left: 5em; padding-right: 2em">sequence file name = /home/public_new/dowlond_phage/phage_gbk/NC_005856.fasta</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">background file name = --nrdb--</td>
+    <td style="padding-left: 5em; padding-right: 2em">alphabet = DNA</td>
+    <td style="padding-left: 5em; padding-right: 2em">max stored scores = 100000</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">allow clobber = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">compute q-values = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">parse genomic coord. = true</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">text only = false</td>
+    <td style="padding-left: 5em; padding-right: 2em">scan both strands = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">max strand = false</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">threshold type = p-value</td>
+    <td style="padding-left: 5em; padding-right: 2em">output theshold = 1e-06</td>
+    <td style="padding-left: 5em; padding-right: 2em">pseudocount = 0.1</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">alpha = 1</td>
+    <td style="padding-left: 5em; padding-right: 2em">verbosity = 2</td>
+    <td style="padding-left: 5em; padding-right: 2em"></td>
+  </tr>
+
+</table>
+</pre>
+<p>
+This information can be useful in the event you wish to report a
+problem with the FIMO software.
+</p>
+<hr>
+<span style="background-color: #DDDDFF"><a href="#top_buttons"><b>Go to top</b></a></span>
+</body>
+</html>
