@@ -1,0 +1,16 @@
+motif_id	motif_alt_id	sequence_name	start	stop	strand	score	p-value	q-value	matched_sequence
+6_motif_3		NC_002371.2	30932	30947	+	23.6768	3.51e-09	0.000293	AAGAAAACTTAAATAT
+6_motif_3		NC_002371.2	30891	30906	-	21.4141	4.78e-08	0.00182	AAGAAGTCTTAAATTT
+6_motif_3		NC_002371.2	31710	31725	-	21.0303	6.55e-08	0.00182	AAGAACACTTAAATTA
+6_motif_3		NC_002371.2	31668	31683	+	20.5859	9.22e-08	0.00192	AAGTCATCTTAAATAA
+66_motif_3		NC_002371.2	30933	30948	+	19.4455	1.21e-07	0.00766	AGAAAACTTAAATATT
+66_motif_3		NC_002371.2	30966	30981	-	19.099	1.84e-07	0.00766	TTAAAAATCAAATAAA
+87_motif_1		NC_002371.2	18862	18877	-	17.2	6.03e-07	0.0501	AAAAGAGATGAAAATA
+6_motif_3		NC_002371.2	30955	30970	-	17.7374	7.52e-07	0.0108	ATAAAAACTTAAGTAA
+6_motif_3		NC_002371.2	31687	31702	-	17.697	7.76e-07	0.0108	AAGGAATCTTTAGTCA
+66_motif_3		NC_002371.2	31669	31684	+	17.505	8.71e-07	0.0242	AGTCATCTTAAATAAA
+6_motif_3		NC_002371.2	40828	40843	-	17.2727	9.96e-07	0.0119	TAGCAATCTTAGATAT
+
+# FIMO (Find Individual Motif Occurrences): Version 5.5.4 compiled on Sep 13 2023 at 21:22:54
+# The format of this file is described at https://meme-suite.org/meme/doc/fimo-output-format.html#tsv_results.
+# fimo --oc /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_002371/motif_meme/fimo_results --thresh 1e-06 /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/new_score_system/NC_002371/motif_meme/final_motif.meme /home/public_new/dowlond_phage/phage_gbk/NC_002371.fasta
