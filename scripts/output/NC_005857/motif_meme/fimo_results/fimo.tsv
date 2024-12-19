@@ -1,0 +1,12 @@
+motif_id	motif_alt_id	sequence_name	start	stop	strand	score	p-value	q-value	matched_sequence
+18_motif_3		NC_005857.1	4695	4710	-	17.3762	9.46e-08	0.00976	TTATTTCTCTCTTTTT
+14_motif_2		NC_005857.1	45499	45513	-	18.32	2.47e-07	0.0109	CATAAAAAAACCGCC
+14_motif_2		NC_005857.1	15309	15323	-	17.9	3.8e-07	0.0109	CATAAAAAAAGCCAC
+14_motif_2		NC_005857.1	32645	32659	+	17.87	3.94e-07	0.0109	CACAAAAAAACACGC
+18_motif_3		NC_005857.1	44814	44829	-	16.4752	4.15e-07	0.0214	TTATTTTTCACTTATT
+14_motif_2		NC_005857.1	48681	48695	-	17.8	4.26e-07	0.0109	AATGAAAAAACCACC
+22_motif_1		NC_005857.1	4695	4710	-	17.0196	7.16e-07	0.0738	TTATTTCTCTCTTTTT
+
+# FIMO (Find Individual Motif Occurrences): Version 5.5.4 compiled on Sep 13 2023 at 21:22:54
+# The format of this file is described at https://meme-suite.org/meme/doc/fimo-output-format.html#tsv_results.
+# fimo --oc /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/scripts/output/NC_005857/motif_meme/fimo_results --thresh 1e-06 /home/hanzequan/test_bectiral/operator_recongize/picture_10_phage_tfbs/EvoMega/scripts/output/NC_005857/motif_meme/final_motif.meme /home/public_new/dowlond_phage/phage_gbk/NC_005857.fasta
