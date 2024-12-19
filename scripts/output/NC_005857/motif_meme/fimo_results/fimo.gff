@@ -1,0 +1,8 @@
+##gff-version 3
+NC_005857.1	fimo	nucleotide_motif	4695	4710	61.4	-	.	Name=22_motif_1_NC_005857.1-;Alias=;ID=22_motif_1-1-NC_005857.1;pvalue=7.16e-07;qvalue=0.0738;sequence=TTATTTCTCTCTTTTT;
+NC_005857.1	fimo	nucleotide_motif	45499	45513	66.1	-	.	Name=14_motif_2_NC_005857.1-;Alias=;ID=14_motif_2-1-NC_005857.1;pvalue=2.47e-07;qvalue=0.0109;sequence=CATAAAAAAACCGCC;
+NC_005857.1	fimo	nucleotide_motif	15309	15323	64.2	-	.	Name=14_motif_2_NC_005857.1-;Alias=;ID=14_motif_2-2-NC_005857.1;pvalue=3.8e-07;qvalue=0.0109;sequence=CATAAAAAAAGCCAC;
+NC_005857.1	fimo	nucleotide_motif	32645	32659	 64	+	.	Name=14_motif_2_NC_005857.1+;Alias=;ID=14_motif_2-3-NC_005857.1;pvalue=3.94e-07;qvalue=0.0109;sequence=CACAAAAAAACACGC;
+NC_005857.1	fimo	nucleotide_motif	48681	48695	63.7	-	.	Name=14_motif_2_NC_005857.1-;Alias=;ID=14_motif_2-4-NC_005857.1;pvalue=4.26e-07;qvalue=0.0109;sequence=AATGAAAAAACCACC;
+NC_005857.1	fimo	nucleotide_motif	4695	4710	70.2	-	.	Name=18_motif_3_NC_005857.1-;Alias=;ID=18_motif_3-1-NC_005857.1;pvalue=9.46e-08;qvalue=0.00976;sequence=TTATTTCTCTCTTTTT;
+NC_005857.1	fimo	nucleotide_motif	44814	44829	63.8	-	.	Name=18_motif_3_NC_005857.1-;Alias=;ID=18_motif_3-2-NC_005857.1;pvalue=4.15e-07;qvalue=0.0214;sequence=TTATTTTTCACTTATT;
