@@ -1,5 +1,5 @@
-# 忽略 Pfam HMM 数据库文件
-scripts/Pfam/*.hmm
+# 忽略 Pfam HMM 数据库文件及其扩展
+scripts/Pfam/Pfam-A.hmm*
 
 # 忽略模型文件
 scripts/models/*.pt
