@@ -14,11 +14,20 @@ from sklearn.cluster import DBSCAN
 import argparse
 import pickle
 import sys
+from intervaltree import IntervalTree
+import glob
 from feature import com_seq_feature
 from write_to_file import *
 from MPI_DFI import *
 from analysis_meme_file import *
 from model_scoring import *
+from gene_interaction import gene_interaction_main  # 导入gene_interaction.py中的主功能
+import torch
+from Bio import SeqIO
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
 def predict_new_sequences(sequences, model, max_len=50):
     """
     使用模型预测新序列并返回各种评分
@@ -92,10 +101,6 @@ class MotifAnalyzer:
         # 从输入文件名中提取 accession ID
         self.accession = os.path.basename(self.input_file).split('.')[0]
 
-        # 验证 accession ID 是否有效（假设以 "NC_" 开头）
-        if not self.accession.startswith('NC_'):
-            print(f"错误: 无法从输入文件名中提取 accession ID。请确保文件名格式为 'NC_xxxxxx.gbk' 或 'NC_xxxxxx.fasta'")
-            sys.exit(1)
 
         # 构建预测路径
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -113,25 +118,36 @@ class MotifAnalyzer:
         # 定义相关文件路径
         self.output_file = os.path.join(self.accession_dir, f"{self.accession}.csv")
         self.meme_file = os.path.join(self.motif_dir, 'final_motif.meme')
-        self.fimo_results_tsv = os.path.join(self.fimo_output_dir, 'fimo_results.tsv')
+        self.fimo_results_tsv = os.path.join(self.fimo_output_dir, 'fimo.txt')
         self.extend_meme_10_path = os.path.join(self.accession_dir, 'extend_meme_10.csv')
         self.results_df_path = os.path.join(self.accession_dir, 'results_df.csv')
         self.rank_list_path = os.path.join(self.accession_dir, 'rank_list.csv')
-        self.tomtom_results_path = os.path.join(self.fimo_output_dir, 'tomtom_results.tsv')
+        self.tomtom_results_path = os.path.join(self.fimo_output_dir, 'tomtom_results')
         self.non_redundant_meme_path = os.path.join(self.motif_dir, 'non_redundant.meme')
 
         # 定义 MEME Suite 可执行文件路径
-        self.meme_bin_dir = os.path.join(script_dir, '..', 'meme', 'bin')
-        self.fimo_executable = os.path.join(self.meme_bin_dir, 'fimo')
-        self.tomtom_executable = os.path.join(self.meme_bin_dir, 'tomtom')
-
+        #self.meme_bin_dir = os.path.join(script_dir, '..', 'meme', 'bin')
+        #self.fimo_executable = os.path.join(self.meme_bin_dir, 'fimo')
+        #self.tomtom_executable = os.path.join(self.meme_bin_dir, 'tomtom')
+        
+        #self.fimo_executable = shutil.which("fimo")
+        #self.tomtom_executable = shutil.which("tomtom")
+        self.fimo_executable = '/home/hanzequan/miniconda3/envs/meme-env/bin/fimo'
+        self.tomtom_executable = '/home/hanzequan/miniconda3/envs/meme-env/bin/tomtom'
+        print('fimo_executable ',self.fimo_executable ,'tomtom_executable',self.tomtom_executable)
         # 验证 MEME Suite 可执行文件是否存在
-        if not os.path.exists(self.fimo_executable):
-            print(f"错误: FIMO 可执行文件不存在: {self.fimo_executable}")
+        if not self.fimo_executable:
+            print("警告: 未找到 fimo 可执行文件，请确保它已安装并在 PATH 中可用。")
             sys.exit(1)
-        if not os.path.exists(self.tomtom_executable):
-            print(f"错误: TOMTOM 可执行文件不存在: {self.tomtom_executable}")
+        if not self.tomtom_executable:
+            print("警告: 未找到 tomtom 可执行文件，请确保它已安装并在 PATH 中可用。")
             sys.exit(1)
+        #if not os.path.exists(self.fimo_executable):
+         #   print(f"错误: FIMO 可执行文件不存在: {self.fimo_executable}")
+        #    sys.exit(1)
+        #if not os.path.exists(self.tomtom_executable):
+        #    print(f"错误: TOMTOM 可执行文件不存在: {self.tomtom_executable}")
+        #    sys.exit(1)
 
         # 创建必要的目录结构
         self._create_directories()
@@ -358,6 +374,7 @@ class MotifAnalyzer:
         all_ids = extract_all_motif_ids(tfbs_df)
         # 3. 全局比对
         tomtom_results = self.run_tomtom_small_e_value(self.tomtom_results_path, combined_motifs_path, combined_motifs_path)
+        print('全局比对,tomtom_results',tomtom_results)
         if tomtom_results is None or tomtom_results.empty:
             # 没有匹配，则所有 motif 各自为一cluster, Match_Count=0
             # cluster内就一个motif，不存在相似匹配。每个motif单独成一组。
@@ -761,7 +778,7 @@ class MotifAnalyzer:
             return
 
         # 使用 FIMO 进行 motif 搜索，设置阈值为 1e-6
-        fimo_success = self.run_fimo(motif_file, output_fasta, output_dir, threshold=1e-1)
+        fimo_success = self.run_fimo(motif_file, output_fasta, output_dir, threshold=1e-3)
 
         if fimo_success:
             # FIMO 成功，检查 fimo.tsv 文件是否存在
@@ -793,7 +810,7 @@ class MotifAnalyzer:
                 fasta_file.write(str(record.seq) + "\n")
         print(f"已将 GenBank 文件转换为 FASTA 格式: {output_fasta}")
 
-    def run_fimo(self, motif_file, genome_fasta, output_dir, threshold=1e-1):
+    def run_fimo(self, motif_file, genome_fasta, output_dir, threshold=1e-3):
         """
         运行 FIMO 并捕获输出。
 
@@ -870,20 +887,31 @@ class MotifAnalyzer:
 
         print(f"已将 FIMO 的 TSV 输出文件转换为: {fimo_tsv_output_path}")
 
+
     def read_fimo_results(self):
         """
         读取 FIMO 结果。
-
+    
         :return: FIMO 结果的 DataFrame 或 None
         """
         try:
-            fimo_results = pd.read_csv(self.fimo_results_tsv, sep='\t', comment='#')
+            # 定义新的列名
+            column_names = [
+                'motif_id', 'sequence_name', 'start', 'stop', 
+                'strand', 'score', 'p-value', 'q-value', 'matched_sequence'
+            ]
+            
+            # 读取 FIMO 结果文件，并使用新的列名
+            fimo_results = pd.read_csv(self.fimo_results_tsv, sep='\t', names=column_names, header=None)
+            
             print(f"成功读取 FIMO 结果: {self.fimo_results_tsv}")
             return fimo_results
         except FileNotFoundError:
             print(f"错误: FIMO 结果文件不存在: {self.fimo_results_tsv}")
             return None
-
+        except Exception as e:
+            print(f"读取 FIMO 结果时发生错误: {e}")
+            return None
     def run_tomtom_small_e_value(self, result_path, query_motif, target_motif):
         """
         运行 Tomtom 分析，并返回结果。
@@ -903,32 +931,59 @@ class MotifAnalyzer:
             target_motif,
             '-verbosity', '1'
         ]
-
+        print('tomtom_command',tomtom_command)
         try:
             subprocess.run(tomtom_command, check=True)
             print("Tomtom 分析成功完成。")
+        #except subprocess.CalledProcessError as e:
+        #    print(f"运行 Tomtom 时发生错误: {e}")
+        #    return None
         except subprocess.CalledProcessError as e:
             print(f"运行 Tomtom 时发生错误: {e}")
+            
+            # 打印标准错误信息，如果 stderr 为 None 则避免调用 decode()
+            if e.stderr:
+                print("标准错误:", e.stderr.decode())
+            else:
+                print("没有标准错误输出")
+            
+            # 打印标准输出，如果 stdout 为 None 则避免调用 decode()
+            if e.stdout:
+                print("标准输出:", e.stdout.decode())
+            else:
+                print("没有标准输出")
+            
             return None
-
-        output_file = os.path.join(result_path, 'tomtom.tsv')
+        output_file = os.path.join(result_path, 'tomtom.txt')
+        print('tomtom output_file',output_file)
         return self.read_tomtom_results(output_file)
 
     def read_tomtom_results(self, output_file):
         """
         读取 Tomtom 分析的结果。
-
+    
         :param output_file: Tomtom 结果文件路径
         :return: Tomtom 结果 DataFrame 或 None
         """
         try:
-            tomtom_results = pd.read_csv(output_file, sep='\t')
+            # 更新列名，确保读取的文件列名和文件内容一致
+            column_names = [
+                "Query_ID", "Target_ID", "Optimal_offset", "p-value", "E-value", 
+                "q-value", "Overlap", "Query_consensus", "Target_consensus", "Orientation"
+            ]
+        
+            # 读取文件并指定列名，header=None 不读取文件中的第一行作为列名
+            tomtom_results = pd.read_csv(output_file, sep='\t', names=column_names, header=None)
+        
             print(f"成功读取 Tomtom 结果: {output_file}")
             return tomtom_results
+        
         except FileNotFoundError:
             print(f"错误: Tomtom 结果文件不存在: {output_file}")
             return None
-
+        except Exception as e:
+            print(f"读取 Tomtom 结果时发生错误: {e}")
+            return None
 def generate_all_pwm_and_write_to_meme(tfbs_df, output_dir):
     """
     将给定的 motif 数据框写入 MEME 格式文件。
@@ -1015,39 +1070,329 @@ def write_motif_to_file(pwm_df, file_path, motif_id,  append=True):
         file.write(f'letter-probability matrix: alength= 4 w= {w} nsites= 20 E= 0\n')
         pwm_string = pwm_df.to_string(index=False, header=False)
         file.write(pwm_string + '\n\n')
+def merge_sequence_contexts(directory_path, file_prefixes):
+    """
+    合并指定目录下多个CSV文件中的序列上下文，并记录每个合并区间内的最高interaction_strength。
+
+    参数:
+    - directory_path (str): 存放CSV文件的根目录路径。
+    - file_prefixes (list of str): 需要处理的文件前缀列表。
+
+    返回:
+    - pd.DataFrame: 合并后的DataFrame，包含 'accession', 'start', 'end', 'sequence', 'score' 列。
+    """
+    # 用于存储最终合并结果的列表
+    large_language_tfbs = []
+
+    # 依次处理每个前缀
+    for prefix in file_prefixes:
+        # 获取当前前缀对应的目录
+        prefix_directory = os.path.join(directory_path, prefix)
+
+        # 获取所有 CSV 文件
+        csv_files = glob.glob(os.path.join(prefix_directory, "*.csv"))
+
+        if not csv_files:
+            print(f"No CSV files found in directory: {prefix_directory}")
+            continue
+
+        # 合并所有 CSV
+        combined_df = pd.concat(
+            (pd.read_csv(file) for file in csv_files),
+            ignore_index=True
+        )
+
+        # 添加 accession 列
+        combined_df['accession'] = prefix
+
+        # 将 absolute_genomic_position 转为 int
+        combined_df['absolute_genomic_position'] = combined_df['absolute_genomic_position'].astype(int)
+
+        # 去重：同一个 absolute_genomic_position 只保留第一行
+        unique_rows = combined_df.drop_duplicates(
+            subset=['absolute_genomic_position'],
+            keep='first'
+        )
+
+        # 增加合并区间的起止列
+        unique_rows['absolute_start'] = unique_rows['absolute_genomic_position'] - 10
+        unique_rows['absolute_end'] = unique_rows['absolute_genomic_position'] + 10
+
+        # 按照 absolute_start 升序排序
+        unique_rows = unique_rows.sort_values(by='absolute_start', ascending=True).reset_index(drop=True)
+
+        # 用于存储当前前缀合并结果的列表
+        merged_data = []
+
+        i = 0
+        while i < len(unique_rows):
+            current_row = unique_rows.iloc[i]
+
+            # 当前合并段的起止坐标
+            min_start = current_row['absolute_start']
+            max_end = current_row['absolute_end']
+
+            # 当前合并段的 sequence（先放第一个行的序列）
+            merged_sequence = current_row['sequence_context']
+
+            # 记录所有被合并区间中最高的 interaction_strength
+            max_score = current_row['interaction_strength']
+
+            j = i + 1
+            # 当后续行与当前段重叠，就进行合并
+            while j < len(unique_rows) and unique_rows.iloc[j]['absolute_start'] <= max_end:
+                next_row = unique_rows.iloc[j]
+
+                # 计算重叠长度，基于当前的 max_end
+                overlap_length = max_end - next_row['absolute_start'] + 1
+
+                # 确保 overlap_length 不超过下一个 'sequence_context' 的长度
+                if overlap_length > len(next_row['sequence_context']):
+                    overlap_length = len(next_row['sequence_context'])
+
+                # 如果有重叠，仅添加非重叠部分的下一个序列
+                if overlap_length > 0:
+                    merged_sequence += next_row['sequence_context'][overlap_length:]
+                else:
+                    merged_sequence += next_row['sequence_context']
+
+                # 更新最高 interaction_strength
+                if next_row['interaction_strength'] > max_score:
+                    max_score = next_row['interaction_strength']
+
+                # 在计算 overlap_length 之后再更新 max_end
+                max_end = max(max_end, next_row['absolute_end'])
+
+                j += 1
+
+            # 把合并好的区间及其最高分数记录下来
+            merged_data.append({
+                'accession': prefix,
+                'start': min_start,
+                'end': max_end,
+                'sequence': merged_sequence,
+                'score': max_score
+            })
+
+            # 跳过已处理的重叠部分，继续下一个不重叠的区间
+            i = j
+
+        # 把当前前缀的合并结果转为 DataFrame 后存入列表
+        merged_df = pd.DataFrame(merged_data)
+        large_language_tfbs.append(merged_df)
+
+    # 如果所有前缀都没有数据，返回空 DataFrame
+    if not large_language_tfbs:
+        print("No data to combine across all prefixes.")
+        return pd.DataFrame()
+
+    # 将所有前缀的结果合并
+    final_df = pd.concat(large_language_tfbs, ignore_index=True)
+
+    return final_df
 def main():
     from joblib import load
-
     parser = argparse.ArgumentParser(description='Motif Analyzer')
     parser.add_argument('-i', '--input_file', type=str, required=True, help='Input GenBank or FASTA file path (e.g., /path/to/NC_005856.gbk)')
     parser.add_argument('-o', '--output_path', type=str, required=True, help='Output directory path to store results')
+    
+    # 新增参数
+    parser.add_argument('--pfam_hmm', type=str, default=os.path.join( 'Pfam', 'Pfam-A.hmm'),
+                        help='Path to Pfam HMM database file (default: scripts/Pfam/Pfam-A.hmm)')
+    parser.add_argument('--model_path', type=str, default=os.path.join( 'model', 'megaDNA_phage_145M.pt'),
+                        help='Path to the model file (default: model/megaDNA_phage_145M.pt)')
+    parser.add_argument('--rf_model_path', type=str, default=os.path.join( 'model', 'tfbs_model.joblib'),
+                        help='Path to the random forest model file (default: model/tfbs_model.joblib)')
+    
     args = parser.parse_args()
 
-    # 加载模型
-    rf_path = os.path.join('model', 'tfbs_model.joblib')  # 使用固定的模型路径
-    if os.path.exists(rf_path):
-        with open(rf_path, 'rb') as f:
-            rf = load(f)
-        print(f"加载随机森林模型: {rf_path}")
+    # 检查 Pfam HMM 文件
+    if not os.path.exists(args.pfam_hmm):
+        print(f"错误: Pfam HMM 文件不存在: {args.pfam_hmm}")
+        sys.exit(1)
+
+    # 检查模型文件
+    if not os.path.exists(args.model_path):
+        print(f"错误: 模型文件不存在: {args.model_path}")
+        sys.exit(1)
+
+    # 检查随机森林模型文件
+    if not os.path.exists(args.rf_model_path):
+        print(f"错误: 随机森林模型文件不存在: {args.rf_model_path}")
+        sys.exit(1)
+
+    # 加载随机森林模型
+    rf = load(args.rf_model_path)
+    print(f"加载随机森林模型: {args.rf_model_path}")
+
+    # 创建输出目录
+    os.makedirs(args.output_path, exist_ok=True)
+    interaction_output_dir = os.path.join(args.output_path, 'interaction')
+    os.makedirs(interaction_output_dir, exist_ok=True)
+
+    # 整合 gene_interaction.py 的功能
+    if os.path.isfile(args.input_file):
+        temp_input_dir = os.path.join(args.output_path, 'temp_gbk')
+        os.makedirs(temp_input_dir, exist_ok=True)
+        shutil.copy(args.input_file, temp_input_dir)
+        input_dir = temp_input_dir
+    elif os.path.isdir(args.input_file):
+        input_dir = args.input_file
     else:
-        print(f"错误: 随机森林模型文件不存在: {rf_path}")
+        print(f"输入路径 {args.input_file} 无效。")
+        sys.exit(1)
+
+    # 初始化模型和设备
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+    # 加载主要模型
+    model = torch.load(args.model_path, map_location=torch.device(device))
+    print(f"加载模型: {args.model_path} 到设备: {device}")
+
+    # 调用 gene_interaction.py 的功能
+    try:
+        gene_interaction_main(
+            input_dir=input_dir,
+            output_dir=interaction_output_dir,
+            pfam_hmm=args.pfam_hmm,
+            protein_names=["Repressor", "Inhibitor", "ProteinX"],  # 替换为您感兴趣的实际蛋白质名称
+            exclude_keywords=["Cro", "anti", "cro", "CRO"],
+            model=model,
+            device=device
+        )
+        print("基因互作分析完成。")
+    except NameError:
+        print("错误: gene_interaction_main 未定义。请确保已正确导入 gene_interaction_main 函数。")
         sys.exit(1)
 
     # 创建 MotifAnalyzer 实例
-    analyzer = MotifAnalyzer(
-        input_file=args.input_file,
-        output_path=args.output_path,
-        model_path=rf_path
-    )
+    try:
+        analyzer = MotifAnalyzer(
+            input_file=args.input_file,
+            output_path=args.output_path,
+            model_path=args.rf_model_path
+        )
+    except NameError:
+        print("错误: MotifAnalyzer 未定义。请确保已正确导入 MotifAnalyzer 类。")
+        sys.exit(1)
 
     # 运行分析
     if rf is not None:
         max_motif, non_redundant_motif, fimo_results = analyzer.run_analysis(rf)
 
-        # 你可以在这里根据需要进一步处理 fimo_results
         if fimo_results is not None:
-            print(fimo_results.head())
+            print(f"FIMO 结果预览:\n{fimo_results.head()}")
+
+    # -------------------- 新增的处理步骤开始 --------------------
+
+    # 定义变量
+    directory_path = os.path.join(interaction_output_dir, 'batch_figure')
+    accession = os.path.splitext(os.path.basename(args.input_file))[0]
+    file_prefixes = [accession]
+
+    # 调用 merge_sequence_contexts 函数
+    llm_matrix = merge_sequence_contexts(directory_path, file_prefixes)
+    if llm_matrix.empty:
+        print("llm_matrix 为空，无法继续后续处理。")
+        sys.exit(1)
+    else:
+        print("llm_matrix 生成成功。")
+
+    # 读取 motif_meme/fimo_results/fimo.txt
+    fimo_path = os.path.join(args.output_path, accession, 'motif_meme', 'fimo_results', 'fimo.txt')
+    if not os.path.exists(fimo_path):
+        print(f"错误: FIMO 结果文件不存在: {fimo_path}")
+        sys.exit(1)
+    motif_metrix = pd.read_csv(fimo_path, sep='\t')
+    print(f"FIMO 文件 {fimo_path} 读取成功。")
+
+    # 读取 output_path/{accession}/{accession}.csv
+    motif_score_path = os.path.join(args.output_path, accession, f"{accession}.csv")
+    if not os.path.exists(motif_score_path):
+        print(f"错误: Motif score 文件不存在: {motif_score_path}")
+        sys.exit(1)
+    motif_score = pd.read_csv(motif_score_path)
+    print(f"Motif score 文件 {motif_score_path} 读取成功。")
+
+    # 获取唯一的 motif patterns
+    unique_patterns = motif_metrix['#pattern name'].unique()
+
+    # 过滤 motif_score 并选择正确的列
+    required_motif_score_columns = {'Motif_ID', 'Total'}
+    if not required_motif_score_columns.issubset(motif_score.columns):
+        print(f"错误: motif_score 文件缺少必要的列: {required_motif_score_columns - set(motif_score.columns)}")
+        sys.exit(1)
+    filtered_motif_score = motif_score[motif_score['Motif_ID'].isin(unique_patterns)][['Motif_ID', 'Total']]
+
+    # 重命名 'Total' 列为 'evolution_score'
+    filtered_motif_score = filtered_motif_score.rename(columns={'Total': 'evolution_score'})
+
+    # 合并到 motif_metrix
+    motif_metrix = motif_metrix.merge(
+        filtered_motif_score,
+        left_on='#pattern name',
+        right_on='Motif_ID',
+        how='left'
+    )
+
+    # 删除不需要的 'Motif_ID' 列
+    motif_metrix = motif_metrix.drop(columns=['Motif_ID'])
+
+    # 确保 start 和 stop 列是整数类型
+    try:
+        motif_metrix['start'] = motif_metrix['start'].astype(int)
+        motif_metrix['stop'] = motif_metrix['stop'].astype(int)
+    except KeyError as e:
+        print(f"错误: motif_metrix 缺少列 {e}")
+        sys.exit(1)
+    except ValueError as e:
+        print(f"错误: 无法将 'start' 或 'stop' 列转换为整数: {e}")
+        sys.exit(1)
+
+    # 检查 llm_matrix 的列名
+    print("Columns in llm_matrix:")
+    print(llm_matrix.columns)
+
+    # 确保 llm_matrix 包含 'start', 'end' 和 'score' 列
+    required_columns = {'start', 'end', 'score'}
+    if not required_columns.issubset(llm_matrix.columns):
+        print(f"错误: llm_matrix 缺少必要的列: {required_columns - set(llm_matrix.columns)}")
+        sys.exit(1)
+
+    try:
+        llm_matrix['start'] = llm_matrix['start'].astype(int)
+        llm_matrix['end'] = llm_matrix['end'].astype(int)
+        llm_matrix['score'] = llm_matrix['score'].astype(float)  # 根据实际情况调整类型
+    except ValueError as e:
+        print(f"错误: 无法转换 llm_matrix 的列类型: {e}")
+        sys.exit(1)
+
+    # 创建 IntervalTree
+    tree = IntervalTree()
+    for _, row in llm_matrix.iterrows():
+        # IntervalTree 的区间是左闭右开，所以 end 需要加 1
+        tree[row['start']:row['end']+1] = row['score']
+
+    # 定义函数获取 llm_score，取最大值
+    def get_llm_score(motif_row):
+        overlapping = tree[motif_row['start']:motif_row['stop']+1]
+        if overlapping:
+            # 取所有重叠的 score 中的最大值
+            return max(interval.data for interval in overlapping)
+        else:
+            return 0  # 或者使用 None，根据需求
+
+    # 应用函数生成 'llm_score' 列
+    motif_metrix['llm_score'] = motif_metrix.apply(get_llm_score, axis=1)
+    print("llm_score 计算完成。")
+
+    # 最后保存 motif_metrix
+    output_motif_metrix_path = os.path.join(args.output_path, accession, f"{accession}_motif_metrix.csv")
+    os.makedirs(os.path.dirname(output_motif_metrix_path), exist_ok=True)  # 确保目录存在
+    motif_metrix.to_csv(output_motif_metrix_path, index=False)
+    print(f"motif_metrix 保存成功: {output_motif_metrix_path}")
+
+    # -------------------- 新增的处理步骤结束 --------------------
 
 if __name__ == "__main__":
     main()
-

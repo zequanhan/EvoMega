@@ -1,0 +1,15 @@
+# 忽略 Pfam HMM 数据库文件
+scripts/Pfam/*.hmm
+
+# 忽略模型文件
+scripts/models/*.pt
+scripts/models/*.joblib
+
+# 忽略输出和临时目录
+output/
+temp_gbk/
+
+# 忽略 Python 缓存文件
+__pycache__/
+*.pyc
+
