@@ -19,7 +19,6 @@
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 - [Contact](#contact)
-- [Database Storage](#database-storage)
 
 ---
 
