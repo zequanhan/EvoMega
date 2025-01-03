@@ -1,4 +1,4 @@
-# EvoMega
+# EvoMega(Co-Evolutionary+MegaDNA)
 
 ## Predicting bacteriophage transcription factor binding sites based on evolutionary relationships and large language model.
 
