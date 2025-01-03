@@ -132,9 +132,8 @@ Ensure that your system meets the following requirements:
 
    - MegaDNA Model:
 
-     ``` bash
-     wget https://huggingface.co/lingxusb/megaDNA_updated/resolve/main/megaDNA_145M.pt -P scripts/model/
-     ```
+        You can download the model by clicking the following link:  [Download megaDNA_145M.pt from Hugging Face](https://huggingface.co/lingxusb/megaDNA_updated/tree/main)
+
 
    - Pfam-A.hmm:
 
